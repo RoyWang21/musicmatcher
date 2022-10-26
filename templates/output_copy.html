@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Our Recommendation</title>
+<script  type="text/javascript" src="js/jquery.min.js"></script>
+<script>    
+
+</script>
+<style>
+    .song-tile {
+    padding: 2px;
+    text-overflow: ellipsis;
+    }
+    * { margin: 0; padding: 0; }
+
+			body  {
+		background-image: url({{ url_for('static', filename='background_gitar.jpg') }});
+		background-repeat: no-repeat;
+		background-size: cover;
+	    }
+		
+		body {
+    position:relative; 
+    left:30px;    
+    background-color:red;
+    }
+    form {
+    display: inline-block; //Or display: inline; 
+    }
+    button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+</style>
+</head>
+
+<body>
+    <form action="/home" method="POST">
+        <input name="return_home" type="image" src="{{ url_for('static', filename='up.png')}}" width="40" height="40">
+    </form>
+
+    <br>
+    {% if liked==True or liked == "" %}
+        <p style="margin-top:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#6baed6;">
+        {{"Recommendation based on your liked song: "+ artistin +", "+ titlein}}</p>
+    {% else %}
+        <p style="margin-top:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#6baed6;">
+        {{"Recommendation based on your disliked song: "+ artistin +", "+ titlein}}</p>
+    {% endif %}
+    
+    <br>
+    {% for post in posts %}
+        <div class="row">
+            <div id="songsinner">
+                <div class="song-tile">
+                    <div class="row">
+                        <div class="col-md-7">
+							<form action="/output" method="POST">
+    							<button type="submit" name="liked" value="1"><img src="{{ url_for('static', filename='heart_like.png')}}" alt="liked" width="20" height="20" style="margin-top:10px"></button>
+    							<button type="submit" name="liked" value="0"><img src="{{ url_for('static', filename='heart_dislike.png')}}" alt="liked" width="20" height="20" style="margin-top:10px"></button>
+    							
+                                <input type="hidden" id="refresh_uri" name="refresh_uri", value="{{post.track_uri}}">
+                                <input type="hidden" id="artistin" name="artistin", value="{{post.artist_name}}">
+                                <input type="hidden" id="titlein" name="titlein", value="{{post.track_name}}">
+                                
+                                <span onclick="alert('play music {{post.track_uri}}');" id="" style="margin-top:30px; margin-left:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#8b6d67;">{{post.artist_name}}</span>
+                                <span id="" style="margin-top:30px; margin-left:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#534F4E;">{{post.track_name}}</span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+    <div id="contentframe" style="position:fixed; top: 100px; left:750px;">
+        <iframe src={{"https://open.spotify.com/embed/track/" + posts[0]['track_uri']}} width="250" height="280" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+</body>
+
+</html>

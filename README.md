@@ -1,4 +1,4 @@
-# musicmather
+# musicmatcher
 A fast music recommender to match your preference
 
 Create a new environment

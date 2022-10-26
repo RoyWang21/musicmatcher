@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music01</title>
+    <style>
+		body  {
+		background-image: url({{ url_for('static', filename='background_gitar.jpg') }});
+		background-repeat: no-repeat;
+		background-size: cover;
+	    }
+
+	</style>
+</head>
+<body>
+
+    <div style="position:absolute;padding:25vw;padding-top:14vw;" id="exploremusic">
+        <h2 style="color:#908886; font-size: 50px; line-height: 50px; text-align:left; font-weight:80; font-family: Roboto, sans-serif; ">Explore Your Music</h3>
+        <form action="/output" method="POST">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="artistinput" class="col-sm-2 control-label" style="color:#706C6B; font-size: 25px; line-height: 30px; text-align:left; font-weight:200; font-family: Roboto, sans-serif;">Artist</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="artistin" class="form-control" id="artistinput" placeholder="e.g. Imagine Dragon">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="titleinput" class="col-sm-2 control-label" style="color:#706C6B; font-size: 25px; line-height: 30px; text-align:left; font-weight:200; font-family: Roboto, sans-serif;">Track Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="titlein" id="titleinput" placeholder="e.g. Natural">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group centered" style="margin-right:10px; margin-top:2vw;">
+                    <div class="col-sm-12">
+                        <button id="explorebutton"  class="btn btn-default" 
+                         style="font-family:Robot, sans-serif; font-size: 12px; text-align:left; font-weight:100;">Start Exploring</button>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
