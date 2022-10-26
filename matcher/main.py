@@ -21,6 +21,7 @@ class Matcher():
 
     def predict_tracks(self, seed_index):
         # Predict
+        seed_index = int(seed_index)
         self.model = joblib.load(Path(config.STORES_DIR, "model.pkl"))
         print('seed track:',
               self.df_tracks.loc[seed_index,'track_name'],
