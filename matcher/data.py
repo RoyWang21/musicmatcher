@@ -1,0 +1,70 @@
+# data.py for ETL process
+import pandas as pd
+import numpy as np
+
+def etl_data():
+    # Load
+    df_tracks = pd.read_csv(
+        'data/sample_tracks_from_fulllist.csv', 
+        index_col=0)
+    df_item_features = pd.read_csv(
+        'data/extracted_track_list_marksample.csv')
+
+    # Extract
+    # select relevant columns
+    df_tracks = df_tracks[['album_name', 
+                           'album_uri', 
+                           'artist_name', 
+                           'artist_uri',
+                           'track_name', 
+                           'track_uri']]
+    df_item_features = df_item_features[['id', 
+                                         'danceability', 
+                                         'energy', 
+                                         'key', 
+                                         'loudness', 
+                                         'mode',
+                                         'speechiness', 
+                                         'acousticness', 
+                                         'instrumentalness', 
+                                         'liveness',
+                                         'valence', 
+                                         'tempo',
+                                         'duration_ms']]
+    df_tracks = df_tracks.dropna(axis=0)
+
+    # extract track id
+    df_tracks['track_id'] = df_tracks.apply(
+                                lambda x: x['track_uri'].split(':')[-1], axis=1)
+    # extract album id
+    df_tracks['album_id'] = df_tracks.apply(
+                                lambda x: x['album_uri'].split(':')[-1], axis=1)
+    # extract artist id
+    df_tracks['artist_id'] = df_tracks.apply(
+                                lambda x: x['artist_uri'].split(':')[-1], axis=1)
+
+    # Transform
+    # merge datasets
+    df_tracks = pd.merge(df_tracks, df_item_features, how='inner', left_on='track_id', right_on='id')
+    df_tracks = df_tracks.drop(['album_uri','artist_uri','track_uri','id'], axis=1)
+    df_tracks = df_tracks.drop_duplicates('track_id').reset_index(drop=True)
+
+    numerical_cols = ['danceability', 
+                      'energy', 
+                      'key', 
+                      'loudness', 
+                      'mode',
+                      'speechiness', 
+                      'acousticness', 
+                      'instrumentalness', 
+                      'liveness',
+                      'valence', 
+                      'tempo', 
+                      'duration_ms']
+    train_X = df_tracks[numerical_cols].values
+
+    # scaling
+    scaler = skpp.MinMaxScaler()
+    train_X = scaler.fit_transform(train_X)
+
+    return df_tracks, train_X
