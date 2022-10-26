@@ -1,6 +1,7 @@
 # data.py for ETL process
 import pandas as pd
 import numpy as np
+import sklearn.preprocessing as skpp
 
 def etl_data():
     # Load
@@ -48,7 +49,14 @@ def etl_data():
     df_tracks = pd.merge(df_tracks, df_item_features, how='inner', left_on='track_id', right_on='id')
     df_tracks = df_tracks.drop(['album_uri','artist_uri','track_uri','id'], axis=1)
     df_tracks = df_tracks.drop_duplicates('track_id').reset_index(drop=True)
-
+    identity_cols = [
+        'track_id',
+        'track_name',
+        'artist_id',
+        'artist_name',
+        'album_id',
+        'album_name'
+        ]
     numerical_cols = ['danceability', 
                       'energy', 
                       'key', 
@@ -67,4 +75,4 @@ def etl_data():
     scaler = skpp.MinMaxScaler()
     train_X = scaler.fit_transform(train_X)
 
-    return df_tracks, train_X
+    return df_tracks[identity_cols], train_X

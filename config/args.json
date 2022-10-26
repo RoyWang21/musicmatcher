@@ -1,0 +1,6 @@
+{
+"k_neighbors":5,
+"output_cols":["track_name",
+		"artist_name",
+		"album_name"]
+}
