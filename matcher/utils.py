@@ -1,7 +1,5 @@
 import json
 from typing import Dict
-import numpy as np
-
 
 def load_dict(filepath: str) -> Dict:
     """Load a dictionary from a JSON's filepath.

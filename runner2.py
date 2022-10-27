@@ -1,10 +1,12 @@
+from argparse import Namespace
+from pathlib import Path
+
+import joblib
 import numpy as np
 import pandas as pd
-from matcher import main
-from argparse import Namespace
-import joblib
+
 from config import config
-from pathlib import Path
+from matcher import main
 
 if __name__ == "__main__":
     matcher = main.Matcher()

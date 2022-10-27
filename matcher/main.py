@@ -1,17 +1,20 @@
-import numpy as np
-import pandas as pd
-from matcher import data, train, predict, utils
-from argparse import Namespace
-import joblib
-from config import config
-from pathlib import Path
 import logging
 import sys
+from argparse import Namespace
+from pathlib import Path
+
+import joblib
+import pandas as pd
+
+from config import config
+from matcher import data, predict, train, utils
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-class Matcher():
+
+class Matcher:
     """The main object of the app contains data and model."""
+
     def __init__(self):
         """
         Initialization: Load datasets, train and persist the model.
@@ -25,32 +28,27 @@ class Matcher():
             self.df_tracks, self.train_X = data.etl_data()
             logging.info("Data extracted successfully.")
         except Exception as e:
-            logging.error(("Data extraction failed, due to:",e))
+            logging.error(("Data extraction failed, due to:", e))
         # Training and persisting model
         try:
             artifacts = train.train(self.args, self.train_X)
             logging.info("Model trained successfully.")
-            joblib.dump(artifacts["model"], 
-                    Path(config.STORES_DIR, "model.pkl"))
+            joblib.dump(artifacts["model"], Path(config.STORES_DIR, "model.pkl"))
             logging.info("Model persisted successfully.")
         except Exception as e:
-            logging.error(("Model training and saving failed, due to:",e))
+            logging.error(("Model training and saving failed, due to:", e))
 
-    def predict_tracks(self, seed_index:int=0)->pd.DataFrame:
+    def predict_tracks(self, seed_index: int = 0) -> pd.DataFrame:
         """
         Inference for recommendation ouput
-        Args: 
+        Args:
             seed_index(int): the index of seed track in the library dataframe
         Returns:
             pd.DataFrame: output info of recommended tracks
         """
         # Predict
         self.model = joblib.load(Path(config.STORES_DIR, "model.pkl"))
-        seed_vector = self.train_X[seed_index].reshape(1,-1)
+        seed_vector = self.train_X[seed_index].reshape(1, -1)
         logging.info("Predicting neighbors of seed track.")
-        df_output = predict.predict(
-                    self.args,
-                    self.model,
-                    seed_vector,
-                    self.df_tracks)
+        df_output = predict.predict(self.args, self.model, seed_vector, self.df_tracks)
         return df_output
