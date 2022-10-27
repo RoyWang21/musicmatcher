@@ -14,7 +14,35 @@
 	</style>
 </head>
 <body>
-    <h1>Welcome to Music Matcher, select a seed track below:</h1>
-    <h2>Track Name: {{track_name}}</h2>
+    
+    <div style="position:absolute;padding:25vw;padding-top:14vw;" id="exploremusic">
+        <h2 style="color:#908886; font-size: 50px; line-height: 50px; text-align:left; font-weight:80; font-family: Roboto, sans-serif; ">Explore Your Music</h3>
+        <form action="/recommend" method="POST">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="artist_input" class="col-sm-2 control-label" style="color:#706C6B; font-size: 25px; line-height: 30px; text-align:left; font-weight:200; font-family: Roboto, sans-serif;">Artist</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="artist_input" class="form-control" id="artist_input" placeholder="e.g. Bruno Mars">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="track_input" class="col-sm-2 control-label" style="color:#706C6B; font-size: 25px; line-height: 30px; text-align:left; font-weight:200; font-family: Roboto, sans-serif;">Track Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="track_input" id="track_input" placeholder="e.g. Just the Way You Are">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group centered" style="margin-right:10px; margin-top:2vw;">
+                    <div class="col-sm-12">
+                        <button id="explorebutton"  class="btn btn-default" 
+                         style="font-family:Robot, sans-serif; font-size: 12px; text-align:left; font-weight:100;">Start Exploring</button>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>
