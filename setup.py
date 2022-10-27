@@ -18,7 +18,7 @@ setup(
     author="Roy Wang",
     author_email="royyi2012@gmail.com",
     url="https://to be finished",
-    python_requires=">=3.7",
+    python_requires="==3.7.13",
     install_requires=[required_packages],
     extras_require={"dev": style_packages},
 )
