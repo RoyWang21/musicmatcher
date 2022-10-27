@@ -4,7 +4,17 @@ from sklearn.neighbors import NearestNeighbors
 from typing import Dict
 from argparse import Namespace
 
-def train(args, train_X) -> Dict:
+def train(args, train_X:np.ndarray) -> Dict:
+    """
+    Train the KNN model to calculate cosine similarities between tracks
+
+    Args:
+        args: input parameters from config
+        train_X: (np.ndarray) numerical features of tracks in library
+
+    Returns:
+        Dict: artifact containing the trained model
+    """
     # Params
     num_recs = args.k_neighbors + 1
 

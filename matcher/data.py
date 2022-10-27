@@ -4,6 +4,11 @@ import numpy as np
 import sklearn.preprocessing as skpp
 
 def etl_data():
+    """ Extract, Load and Transform Data Pipeline
+    Returns:
+        pd.DataFrame: df_tracks contains meta info of tracks in library
+        np.ndarray: Train_X contains numerical features for training model
+    """
     # Load
     df_tracks = pd.read_csv(
         'data/sample_tracks_from_fulllist.csv', 

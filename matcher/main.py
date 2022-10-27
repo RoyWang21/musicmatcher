@@ -5,29 +5,49 @@ from argparse import Namespace
 import joblib
 from config import config
 from pathlib import Path
+import logging
+import sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class Matcher():
+    """The main object of the app contains data and model."""
     def __init__(self):
+        """
+        Initialization: Load datasets, train and persist the model.
+        """
         # Params
         self.args_fp = "config/args.json"
         self.args = Namespace(**utils.load_dict(filepath=self.args_fp))
         self.num_recs = 1 + self.args.k_neighbors
         # Data
-        self.df_tracks, self.train_X = data.etl_data()
+        try:
+            self.df_tracks, self.train_X = data.etl_data()
+            logging.info("Data extracted successfully.")
+        except Exception as e:
+            logging.error(("Data extraction failed, due to:",e))
         # Training and persisting model
-        artifacts = train.train(self.args, self.train_X)
-        joblib.dump(artifacts["model"], 
+        try:
+            artifacts = train.train(self.args, self.train_X)
+            logging.info("Model trained successfully.")
+            joblib.dump(artifacts["model"], 
                     Path(config.STORES_DIR, "model.pkl"))
+            logging.info("Model persisted successfully.")
+        except Exception as e:
+            logging.error(("Model training and saving failed, due to:",e))
 
-    def predict_tracks(self, seed_index):
+    def predict_tracks(self, seed_index:int=0)->pd.DataFrame:
+        """
+        Inference for recommendation ouput
+        Args: 
+            seed_index(int): the index of seed track in the library dataframe
+        Returns:
+            pd.DataFrame: output info of recommended tracks
+        """
         # Predict
-        seed_index = int(seed_index)
         self.model = joblib.load(Path(config.STORES_DIR, "model.pkl"))
-        print('seed track:',
-              self.df_tracks.loc[seed_index,'track_name'],
-              ',  by:',
-              self.df_tracks.loc[seed_index,'artist_name'])
-        seed_vector = self.train_X[seed_index].reshape(-1,1).T
+        seed_vector = self.train_X[seed_index].reshape(1,-1)
+        logging.info("Predicting neighbors of seed track.")
         df_output = predict.predict(
                     self.args,
                     self.model,
