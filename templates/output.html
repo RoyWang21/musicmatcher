@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Our Recommendation</title>
+<script  type="text/javascript" src="js/jquery.min.js"></script>
+<script>    
+
+</script>
+<style>
+    .playlist {
+    padding: 5px;
+    text-overflow: ellipsis;
+    }
+    .navbar {
+        position:absolute; 
+        left:60%;
+        top: 8%;
+        width: 88%;
+    }
+    .navbar ul li{
+        list-style: none;
+        display: inline-block;
+        margin: 0px 15px;
+    }
+    .navbar ul li a{
+        font-size: 15px; 
+        font-family: Roboto, sans-serif; 
+        color:#534F4E;
+        text-decoration: none;
+    }
+    .spotifyuri{
+    position:absolute; 
+    left:62%;
+    top: 33%;
+    }
+    * { margin: 0; padding: 0; }
+
+		body  {
+        height: 100vh;
+        width: 100%;
+		background-image: url({{ url_for('static', filename='background01.png') }});
+        background-repeat: no-repeat;
+		background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+	    }
+
+	.playlist{
+    position:relative; 
+    left:50px;
+    top: 15%;
+    width: 60%;
+    }
+    .playlist span{
+        margin-top:30px; 
+        margin-left:10px; 
+        font-size: 20px; 
+        font-family: Roboto, sans-serif; 
+        color:#8b6d67;
+        width: 60%;
+    }
+    form {
+    display: inline-block; //Or display: inline; 
+    }
+    button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+.nowplaying{
+    left: 62%;
+    position: absolute;
+    top: 44%;
+}
+.nowplaying h1{
+    font-size: 50px;
+    font-family: Roboto, sans-serif; 
+    color: #FFFF;
+    line-height: 110px;
+    float: left;
+}
+.nowplaying h2{
+    font-size: 30px;
+    font-family: Apple Chancery, cursive;
+    color: #FFFF;
+    line-height: 30px;
+    float: left;
+}
+.playing {
+    left: 65%;
+    position: absolute;
+    top: 20%;
+}
+.logo {
+    left: 55%;
+    position: absolute;
+    top: 5%;
+}
+</style>
+</head>
+
+<body>
+    <div class="spotifyuri">
+        <iframe src={{"https://open.spotify.com/embed/track/" + nowplay}} width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+    <div class=logo>
+        <img src="{{ url_for('static', filename='logo_13.png')}}" width="80" height="80" style="margin-top:10px">
+    </div>
+    <div class="navbar">
+        <ul>
+            <li><a href="http://127.0.0.1:5000" style="margin-top:10px; margin-left:10px; ">HOME</a></li>
+            <li><a href="http://127.0.0.1:5000/about">ABOUT</a></li>
+            <li><a href="http://127.0.0.1:5000/datasource">DATA SOURCE</a></li>
+            <li><a href="http://127.0.0.1:5000/algorithm">ALGORITHM</a></li>
+        </ul>
+    </div>
+    <br>
+    <div class=playing>
+        <img src="{{ url_for('static', filename='playing.gif')}}" width="200" height="80" style="margin-top:10px"">
+    </div>
+    {% for i in range(10) %}
+    <div class="playlist">
+	    <form action="/output" method="POST">
+            <button type="submit" name="play_idx" value="{{posts['track_uri'].loc[i]}}"><img src="{{ url_for('static', filename='play02.png')}}" width="18.5" height="18.5" style="margin-top:10px"></button>
+    		<button type="submit" name="liked" value="{{posts['track_uri'].loc[i]}}"><img src="{{ url_for('static', filename='heart_like.png')}}" width="20" height="20" style="margin-top:10px"></button>
+    		<button type="submit" name="dislike" value="{{posts['track_uri'].loc[i]}}"><img src="{{ url_for('static', filename='heart_dislike.png')}}" width="20" height="20" style="margin-top:10px"></button>   
+            
+        </form>
+            <span>{{posts['artist_name'].loc[i]}}</span>
+            <span>{{posts['track_name'].loc[i]}}</span>
+    
+    </div>
+    {% endfor %}
+    
+    <div class="nowplaying">
+        <h1>NOW PLAYING: </h1><br>
+        <h2>{{posts['track_name'].loc[0]}} ...</h2>
+    </div>
+
+    
+    
+
+
+</body>
+
+</html>
