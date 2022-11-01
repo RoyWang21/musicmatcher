@@ -72,4 +72,7 @@ def etl_data():
     scaler = skpp.MinMaxScaler()
     train_X = scaler.fit_transform(train_X)
 
+    # convert str to all lower cases
+    df_tracks['track_name'] = df_tracks['track_name'].str.lower()
+    df_tracks['artist_name'] = df_tracks['artist_name'].str.lower()
     return df_tracks[identity_cols], train_X

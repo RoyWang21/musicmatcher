@@ -49,6 +49,9 @@ def _index(request: Request):
 def _recommend(request: Request, artist_input: str = Form(), track_input: str = Form()):
     """Recommend the matched items given seed item"""
     logging.info(("user input:", artist_input, track_input))
+    # make the input case in-sensitive
+    artist_input = artist_input.lower()
+    track_input = track_input.lower()
     # find the seed track from library
     try:
         seed_index = matcher.df_tracks.loc[
