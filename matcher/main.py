@@ -25,7 +25,7 @@ class Matcher:
         self.num_recs = 1 + self.args.k_neighbors
         # Data
         try:
-            self.df_tracks, self.train_X = data.etl_data()
+            self.df_tracks, self.train_X = data.etl_data(self.args)
             logging.info("Data extracted successfully.")
         except Exception as e:
             logging.error(("Data extraction failed, due to:", e))

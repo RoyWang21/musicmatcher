@@ -3,7 +3,7 @@ import pandas as pd
 import sklearn.preprocessing as skpp
 
 
-def etl_data():
+def etl_data(args):
     """Extract, Load and Transform Data Pipeline
     Returns:
         pd.DataFrame: df_tracks contains meta info of tracks in library
@@ -15,25 +15,9 @@ def etl_data():
 
     # Extract
     # select relevant columns
-    df_tracks = df_tracks[
-        ["album_name", "album_uri", "artist_name", "artist_uri", "track_name", "track_uri"]
-    ]
+    df_tracks = df_tracks[args.read_cols] 
     df_item_features = df_item_features[
-        [
-            "id",
-            "danceability",
-            "energy",
-            "key",
-            "loudness",
-            "mode",
-            "speechiness",
-            "acousticness",
-            "instrumentalness",
-            "liveness",
-            "valence",
-            "tempo",
-            "duration_ms",
-        ]
+        ["id"] + args.numerical_cols
     ]
     df_tracks = df_tracks.dropna(axis=0)
 
@@ -49,24 +33,9 @@ def etl_data():
     df_tracks = pd.merge(
         df_tracks, df_item_features, how="inner", left_on="track_id", right_on="id"
     )
-    df_tracks = df_tracks.drop(["album_uri", "artist_uri", "track_uri", "id"], axis=1)
+#    df_tracks = df_tracks.drop(["album_uri", "artist_uri", "track_uri", "id"], axis=1)
     df_tracks = df_tracks.drop_duplicates("track_id").reset_index(drop=True)
-    identity_cols = ["track_id", "track_name", "artist_id", "artist_name", "album_id", "album_name"]
-    numerical_cols = [
-        "danceability",
-        "energy",
-        "key",
-        "loudness",
-        "mode",
-        "speechiness",
-        "acousticness",
-        "instrumentalness",
-        "liveness",
-        "valence",
-        "tempo",
-        "duration_ms",
-    ]
-    train_X = df_tracks[numerical_cols].values
+    train_X = df_tracks[args.numerical_cols].values
 
     # scaling
     scaler = skpp.MinMaxScaler()
@@ -75,4 +44,4 @@ def etl_data():
     # convert str to all lower cases
     df_tracks['track_name'] = df_tracks['track_name'].str.lower()
     df_tracks['artist_name'] = df_tracks['artist_name'].str.lower()
-    return df_tracks[identity_cols], train_X
+    return df_tracks[args.identity_cols], train_X
