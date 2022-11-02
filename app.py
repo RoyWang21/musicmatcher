@@ -8,7 +8,6 @@ from fastapi import FastAPI, Form, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from pydantic import BaseModel
 from matcher import main
 
 # Define Application
@@ -21,14 +20,10 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-class Data(BaseModel):
-    play_idx: str
-
 @app.on_event("startup")
 def _initialize():
     """initialize model&data object when app start"""
-    global matcher, artist_input, track_input, posts
-    artist_input, track_input, posts = None, None, None
+    global matcher
     matcher = main.Matcher()
     logging.info("App initialized!")
 

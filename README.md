@@ -21,8 +21,6 @@ Check live [DEMO](https://musicmatcher21.herokuapp.com/).
 TODO:
 
 - UI:
-	- upgrade for playing now.
-	- case insensitive.
 - Data:
 	- use popular songs in library.
 	- incorporate spotify API to fetch more recent musics.
