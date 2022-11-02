@@ -1,12 +1,14 @@
 import logging
 import sys
 from http import HTTPStatus
+from typing import Optional
 
 import numpy as np
 from fastapi import FastAPI, Form, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from pydantic import BaseModel
 from matcher import main
 
 # Define Application
@@ -19,11 +21,14 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+class Data(BaseModel):
+    play_idx: str
 
 @app.on_event("startup")
 def _initialize():
     """initialize model&data object when app start"""
-    global matcher
+    global matcher, artist_input, track_input, posts
+    artist_input, track_input, posts = None, None, None
     matcher = main.Matcher()
     logging.info("App initialized!")
 
@@ -44,9 +49,11 @@ def _index(request: Request):
         },
     )
 
-
 @app.post("/recommend", tags=["recommendation"])
-def _recommend(request: Request, artist_input: str = Form(), track_input: str = Form()):
+def _recommend(request: Request,
+               artist_input: str = Form(),
+               track_input: str = Form(),
+               refresh_uri: str = Form(None)): 
     """Recommend the matched items given seed item"""
     logging.info(("user input:", artist_input, track_input))
     # make the input case in-sensitive
@@ -59,7 +66,7 @@ def _recommend(request: Request, artist_input: str = Form(), track_input: str = 
             & (matcher.df_tracks["artist_name"] == artist_input)
         ].index.values[0]
         assert type(seed_index) is np.int64, "Warning: seed_index is not int type."
-        seed_uri = str(matcher.df_tracks.loc[[seed_index], "track_id"].values[0])
+        seed_id = str(matcher.df_tracks.loc[[seed_index], "track_id"].values[0])
     except Exception as e:
         logging.error(("Seed track not found, due to:", e))
     # generate recommendation based on the seed track
@@ -68,6 +75,9 @@ def _recommend(request: Request, artist_input: str = Form(), track_input: str = 
         posts = recs.to_dict(orient="records")
     except Exception as e:
         logging.error(("Prediction failed due to:", e))
+    # determine the playnow uri
+    if refresh_uri != '0':
+        seed_id = refresh_uri.split(':')[-1]
     return templates.TemplateResponse(
         "recommend.html",
         {
@@ -75,7 +85,7 @@ def _recommend(request: Request, artist_input: str = Form(), track_input: str = 
             "posts": posts,
             "artist_input": artist_input,
             "track_input": track_input,
-            "track_uri": seed_uri,
+            "playnow_id": seed_id,
             "liked": "",
         },
     )

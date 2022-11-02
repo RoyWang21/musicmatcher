@@ -61,15 +61,20 @@
                 <div class="song-tile">
                     <div class="row">
                         <div class="col-md-7">
-							<form action="/output" method="POST">
+                            <form action="/recommend" method="POST">
+                                <input type="hidden" name="track_input" value="{{track_input}}"/>
+                                <input type="hidden" name="refresh_uri" value="{{post.track_uri}}"/>
+                                <button type="submit" id="artist_input" name="artist_input" value="{{artist_input}}"><img src="{{ url_for('static', path='play02.png')}}" width="18.5" height="18.5" style="margin-top:10px"></button>
+							</form>
+							<form action="/recommend" method="POST">
+    							
     							<button type="submit" name="liked" value="1"><img src="{{ url_for('static', path='heart_like.png')}}" alt="liked" width="20" height="20" style="margin-top:10px"></button>
     							<button type="submit" name="liked" value="0"><img src="{{ url_for('static', path='heart_dislike.png')}}" alt="liked" width="20" height="20" style="margin-top:10px"></button>
     							
-                                <input type="hidden" id="refresh_uri" name="refresh_uri", value="{{post.track_uri}}">
                                 <input type="hidden" id="artist_input" name="artist_input", value="{{post.artist_name}}">
                                 <input type="hidden" id="track_input" name="track_input", value="{{post.track_name}}">
                                 
-                                <span onclick="alert('play music {{post.track_uri}}');" id="" style="margin-top:30px; margin-left:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#8b6d67;">{{post.artist_name}}</span>
+                                <span onclick="alert('play music {{post.playnow_id}}');" id="" style="margin-top:30px; margin-left:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#8b6d67;">{{post.artist_name}}</span>
                                 <span id="" style="margin-top:30px; margin-left:10px; font-size: 20px; font-family: Roboto, sans-serif; color:#534F4E;">{{post.track_name}}</span>
                             </form>
                         </div>
@@ -81,7 +86,7 @@
 
 
     <div id="contentframe" style="position:fixed; top: 100px; left:750px;">
-        <iframe src={{"https://open.spotify.com/embed/track/" + track_uri}} width="250" height="280" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <iframe src={{"https://open.spotify.com/embed/track/" + playnow_id}} width="250" height="280" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
     </div>
 </body>
 
