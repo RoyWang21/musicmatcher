@@ -1,6 +1,7 @@
 import json
 from typing import Dict
 
+
 def load_dict(filepath: str) -> Dict:
     """Load a dictionary from a JSON's filepath.
     Args:

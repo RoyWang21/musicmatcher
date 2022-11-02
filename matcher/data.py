@@ -15,10 +15,8 @@ def etl_data(args):
 
     # Extract
     # select relevant columns
-    df_tracks = df_tracks[args.read_cols] 
-    df_item_features = df_item_features[
-        ["id"] + args.numerical_cols
-    ]
+    df_tracks = df_tracks[args.read_cols]
+    df_item_features = df_item_features[["id"] + args.numerical_cols]
     df_tracks = df_tracks.dropna(axis=0)
 
     # extract track id
@@ -33,7 +31,7 @@ def etl_data(args):
     df_tracks = pd.merge(
         df_tracks, df_item_features, how="inner", left_on="track_id", right_on="id"
     )
-#    df_tracks = df_tracks.drop(["album_uri", "artist_uri", "track_uri", "id"], axis=1)
+    #    df_tracks = df_tracks.drop(["album_uri", "artist_uri", "track_uri", "id"], axis=1)
     df_tracks = df_tracks.drop_duplicates("track_id").reset_index(drop=True)
     train_X = df_tracks[args.numerical_cols].values
 
@@ -42,6 +40,6 @@ def etl_data(args):
     train_X = scaler.fit_transform(train_X)
 
     # convert str to all lower cases
-    df_tracks['track_name'] = df_tracks['track_name'].str.lower()
-    df_tracks['artist_name'] = df_tracks['artist_name'].str.lower()
+    df_tracks["track_name"] = df_tracks["track_name"].str.lower()
+    df_tracks["artist_name"] = df_tracks["artist_name"].str.lower()
     return df_tracks[args.identity_cols], train_X

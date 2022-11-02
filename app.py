@@ -20,6 +20,7 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+
 @app.on_event("startup")
 def _initialize():
     """initialize model&data object when app start"""
@@ -44,11 +45,14 @@ def _index(request: Request):
         },
     )
 
+
 @app.post("/recommend", tags=["recommendation"])
-def _recommend(request: Request,
-               artist_input: str = Form(),
-               track_input: str = Form(),
-               refresh_uri: str = Form(None)): 
+def _recommend(
+    request: Request,
+    artist_input: str = Form(),
+    track_input: str = Form(),
+    refresh_uri: str = Form(None),
+):
     """Recommend the matched items given seed item"""
     logging.info(("user input:", artist_input, track_input))
     # make the input case in-sensitive
@@ -71,8 +75,8 @@ def _recommend(request: Request,
     except Exception as e:
         logging.error(("Prediction failed due to:", e))
     # determine the playnow uri
-    if refresh_uri != '0':
-        seed_id = refresh_uri.split(':')[-1]
+    if refresh_uri != "0":
+        seed_id = refresh_uri.split(":")[-1]
     return templates.TemplateResponse(
         "recommend.html",
         {
