@@ -20,7 +20,10 @@ Check live [DEMO](https://musicmatcher21.herokuapp.com/).
 
 TODO:
 
-- UI:
+- UI/Feature:
+	- allow user to construct a playlist, then populate it with recs of latest new tracks.
+	- enable searching by artist name, return hot tracks
 - Data:
 	- use popular songs in library.
 	- incorporate spotify API to fetch more recent musics.
+	- use fastAPI background task to load latest tracks via API?
